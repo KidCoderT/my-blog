@@ -1,0 +1,72 @@
+---
+import { render } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import { getPosts, tagUrl, vtName, fmtDate, type Post } from '../../posts'
+
+export async function getStaticPaths() {
+  return (await getPosts()).map((post) => ({ params: { collection: post.collection, slug: post.id }, props: { post } }))
+}
+
+const { post } = Astro.props as { post: Post }
+const { Content, headings } = await render(post)
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3)
+const { title, description, date, updated, tags } = post.data
+
+// Giscus: make the repo public, enable Discussions, install https://github.com/apps/giscus,
+// then copy the ids from https://giscus.app. Comments stay hidden until repoId is filled in.
+const GISCUS = { repo: 'KidCoderT/my-blog', repoId: '', category: 'Announcements', categoryId: '' }
+---
+
+<Base title={title} description={description}>
+  <article class="post-grid">
+    <header class="post-head">
+      <h1><span class="vt-title" style={`view-transition-name:${vtName(post)}`}>{title}</span></h1>
+      <div class="post-meta muted">
+        <time datetime={date.toISOString()}>{fmtDate(date)}</time>
+        {updated && <span>· updated {fmtDate(updated)}</span>}
+        {tags.map((t) => <a class="tag" href={tagUrl(t)}>#{t}</a>)}
+      </div>
+    </header>
+
+    {
+      toc.length > 1 && (
+        <nav class="toc" aria-label="Table of contents">
+          <details open>
+            <summary>On this page</summary>
+            <ul>
+              {toc.map((h) => (
+                <li class={`d${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>
+              ))}
+            </ul>
+          </details>
+        </nav>
+      )
+    }
+
+    <div class="prose" data-pagefind-body>
+      <Content />
+    </div>
+  </article>
+
+  {
+    GISCUS.repoId && (
+      <section class="comments" id="comments" data-giscus={JSON.stringify(GISCUS)}>
+        <script is:inline>
+          // Load Giscus with the current light/dark theme; the header toggle keeps it in sync after.
+          {
+            const host = document.getElementById('comments')
+            const s = document.createElement('script')
+            s.src = 'https://giscus.app/client.js'
+            s.async = true
+            s.crossOrigin = 'anonymous'
+            Object.assign(s.dataset, JSON.parse(host.dataset.giscus), {
+              mapping: 'pathname', reactionsEnabled: '1', inputPosition: 'top', lang: 'en', loading: 'lazy',
+              theme: document.documentElement.dataset.theme || 'light',
+            })
+            host.append(s)
+          }
+        </script>
+      </section>
+    )
+  }
+</Base>

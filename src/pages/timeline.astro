@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro'
+import Timeline from '../components/Timeline.astro'
+import { getPosts } from '../posts'
+
+const posts = await getPosts()
+---
+
+<Base title="Timeline" description="Every post, by year.">
+  <h1 class="page-title">Timeline</h1>
+  <Timeline posts={posts} />
+</Base>

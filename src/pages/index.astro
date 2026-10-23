@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro'
+import { getPosts, postUrl, tagUrl, url, vtName, fmtDate } from '../posts'
+
+// latest few of each kind; the full lists live at /blog/ and /notes/
+const sections = [
+  { title: 'Blog', more: 'All posts', href: url('blog/'), posts: (await getPosts('blog')).slice(0, 3) },
+  { title: 'Notes', more: 'All notes', href: url('notes/'), posts: (await getPosts('notes')).slice(0, 3) },
+]
+// ponytail: ~200 words/min, counts raw markdown so code/math inflate it slightly
+const minutes = (body = '') => Math.max(1, Math.round(body.split(/\s+/).length / 200))
+---
+
+<Base>
+  <section class="intro">
+    <div class="intro-id">
+      <!-- ponytail: GitHub avatar by URL; drop a file in public/ and point src at url('avatar.png') to self-host -->
+      <img class="avatar" src="https://github.com/KidCoderT.png?size=192" width="88" height="88" alt="Tejas" />
+      <div>
+        <h1 class="page-title">Hi, I'm Tejas</h1>
+        <p class="tagline">I love building and learning, and wish to share my knowledge with the world!</p>
+      </div>
+    </div>
+    <div class="intro-links">
+      <a href="https://github.com/KidCoderT">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+        GitHub
+      </a>
+      <a href="https://kidcodert.github.io/portfolio2026">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+        Portfolio
+      </a>
+      <a href={url('about/')}>More about me</a>
+    </div>
+  </section>
+
+  {
+    sections.map(({ title, more, href, posts }) =>
+      posts.length > 0 && (
+        <section class="home-section">
+          <div class="section-head spark-host">
+            <h2><span class="spark">{title}</span></h2>
+            <a href={href}>{more} →</a>
+          </div>
+          <ul class="entries">
+            {posts.map((p) => (
+              <li class="entry spark-host">
+                <a class="entry-link" href={postUrl(p)}>
+                  <h3><span class="vt-title spark" style={`view-transition-name:${vtName(p)}`}>{p.data.title}</span></h3>
+                  <div class="entry-meta">
+                    <time datetime={p.data.date.toISOString()}>{fmtDate(p.data.date)}</time> · {minutes(p.body)} min read
+                  </div>
+                  <p>{p.data.description}</p>
+                </a>
+                {p.data.tags.length > 0 && (
+                  <div class="entry-tags">
+                    {p.data.tags.map((t) => <a href={tagUrl(t)}>#{t}</a>)}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    )
+  }
+</Base>

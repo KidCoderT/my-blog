@@ -1,0 +1,39 @@
+---
+// Pudding-style timeline: posts grouped by year, newest first.
+import { fmtDate, postUrl, vtName, type Post } from '../posts'
+
+const { posts } = Astro.props as { posts: Post[] }
+
+const years = new Map<number, Post[]>()
+for (const p of posts) {
+  const y = p.data.date.getUTCFullYear()
+  years.set(y, [...(years.get(y) ?? []), p])
+}
+// dd-mm; the year is the group heading
+const ddmm = (d: Date) => fmtDate(d).slice(0, 5)
+---
+
+{
+  [...years].map(([year, list]) => (
+    <section aria-labelledby={`y${year}`}>
+      <div class="year-head">
+        <span class="date" id={`y${year}`}>{year}</span>
+        <span class="connector"><span class="dot" /></span>
+        <span class="muted">{list.length} post{list.length > 1 ? 's' : ''}</span>
+      </div>
+      <ul class="tl">
+        {list.map((p) => (
+          <li>
+            <a class="tl-row spark-host" href={postUrl(p)}>
+              <time class="date" datetime={p.data.date.toISOString()}>{ddmm(p.data.date)}</time>
+              <span class="connector"><span class="dot" /></span>
+              <span class="tl-title"><span class="vt-title spark" style={`view-transition-name:${vtName(p)}`}>{p.data.title}</span></span>
+              <span class="tl-tags">{p.data.tags.map((t) => `#${t}`).join(' ')}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))
+}
+{posts.length === 0 && <p class="muted">No posts yet.</p>}

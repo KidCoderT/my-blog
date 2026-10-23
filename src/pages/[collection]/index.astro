@@ -1,0 +1,19 @@
+---
+// /blog/ and /notes/: one Timeline per folder (home and /timeline/ show both merged)
+import Base from '../../layouts/Base.astro'
+import Timeline from '../../components/Timeline.astro'
+import { getPosts, KINDS, type Kind } from '../../posts'
+
+export function getStaticPaths() {
+  return KINDS.map((collection) => ({ params: { collection } }))
+}
+
+const kind = Astro.params.collection as Kind
+const title = kind === 'blog' ? 'Blog' : 'Notes'
+const posts = await getPosts(kind)
+---
+
+<Base title={title}>
+  <h1 class="page-title">{title}</h1>
+  <Timeline posts={posts} />
+</Base>

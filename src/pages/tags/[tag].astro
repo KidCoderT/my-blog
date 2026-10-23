@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro'
+import Timeline from '../../components/Timeline.astro'
+import { getPosts, url, type Post } from '../../posts'
+
+export async function getStaticPaths() {
+  const posts = await getPosts()
+  const tags = new Set(posts.flatMap((p) => p.data.tags))
+  return [...tags].map((tag) => ({ params: { tag }, props: { posts: posts.filter((p) => p.data.tags.includes(tag)) } }))
+}
+
+const { tag } = Astro.params
+const { posts } = Astro.props as { posts: Post[] }
+---
+
+<Base title={`#${tag}`}>
+  <h1 class="page-title">#{tag}</h1>
+  <p class="muted">{posts.length} post{posts.length > 1 ? 's' : ''} · <a href={url('tags/')}>all tags</a></p>
+  <Timeline posts={posts} />
+</Base>
