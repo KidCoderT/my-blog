@@ -730,6 +730,19 @@ main.wrap {
   border-radius: 5px;
 }
 
+.prose details {
+  margin: 1.5rem 0;
+  padding: 0.75rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--wash);
+}
+.prose summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--accent);
+}
+
 .prose img {
   display: block;
   margin: 1.5rem auto;
