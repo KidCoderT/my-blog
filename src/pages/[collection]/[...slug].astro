@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content'
 import Base from '../../layouts/Base.astro'
-import { getPosts, tagUrl, vtName, fmtDate, type Post } from '../../posts'
+import { getPosts, tagUrl, vtName, fmtDate, GOATCOUNTER, type Post } from '../../posts'
 
 export async function getStaticPaths() {
   return (await getPosts()).map((post) => ({ params: { collection: post.collection, slug: post.id }, props: { post } }))
@@ -14,7 +14,7 @@ const { title, description, date, updated, tags } = post.data
 
 // Giscus: make the repo public, enable Discussions, install https://github.com/apps/giscus,
 // then copy the ids from https://giscus.app. Comments stay hidden until repoId is filled in.
-const GISCUS = { repo: 'KidCoderT/my-blog', repoId: '', category: 'Announcements', categoryId: '' }
+const GISCUS = { repo: 'KidCoderT/my-blog', repoId: 'R_kgDOVU5QCA', category: 'Announcements', categoryId: 'DIC_kwDOVU5QCM4DJej6' }
 ---
 
 <Base title={title} description={description}>
@@ -47,6 +47,67 @@ const GISCUS = { repo: 'KidCoderT/my-blog', repoId: '', category: 'Announcements
       <Content />
     </div>
   </article>
+
+  <footer class="end-mark" id="end-mark" data-gc={GOATCOUNTER}>
+    <div class="end-rule" aria-hidden="true"><span class="end-spark">✦</span></div>
+    <p class="end-thanks">That's all from me. Thanks for reading till the end!</p>
+    <p class="end-views" id="end-views">&nbsp;</p>
+  </footer>
+
+  <script>
+    // End mark: one twinkle when the reader gets here, plus this page's view count
+    const end = document.getElementById('end-mark')!
+    new IntersectionObserver(([e], io) => {
+      if (e.isIntersecting) {
+        end.classList.add('seen')
+        io.disconnect()
+      }
+    }, { threshold: 0.6 }).observe(end)
+
+    const views = document.getElementById('end-views')!
+    if (end.dataset.gc) {
+      fetch(`${end.dataset.gc}/counter/${encodeURIComponent(location.pathname)}.json`)
+        .then((r) => (r.ok ? r.json() : Promise.reject()))
+        .then(({ count }) => {
+          views.textContent = count === '1' ? 'Read once' : `Read ${count} times`
+          views.classList.add('loaded')
+        })
+        .catch(() => {})
+    }
+  </script>
+
+  <script>
+    // Hover copy button on every code block
+    const COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>'
+    const DONE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>'
+    for (const pre of document.querySelectorAll<HTMLPreElement>('.prose pre')) {
+      const wrap = document.createElement('div')
+      wrap.className = 'code-wrap'
+      pre.replaceWith(wrap)
+      wrap.append(pre)
+      const btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'copy-btn'
+      btn.ariaLabel = 'Copy code'
+      btn.innerHTML = COPY
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(pre.innerText)
+        } catch {
+          return
+        }
+        btn.innerHTML = DONE
+        btn.classList.add('copied')
+        btn.ariaLabel = 'Copied'
+        setTimeout(() => {
+          btn.innerHTML = COPY
+          btn.classList.remove('copied')
+          btn.ariaLabel = 'Copy code'
+        }, 1500)
+      })
+      wrap.append(btn)
+    }
+  </script>
 
   {
     GISCUS.repoId && (

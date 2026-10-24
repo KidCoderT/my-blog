@@ -1,7 +1,7 @@
 ---
 import 'katex/dist/katex.min.css'
 import '../styles/global.css'
-import { url } from '../posts'
+import { url, GOATCOUNTER } from '../posts'
 
 interface Props {
   title?: string
@@ -60,6 +60,7 @@ const isActive = (p: string) => (p === '' ? path === url('') : path.startsWith(u
         document.documentElement.dataset.theme = dark ? 'dark' : 'light'
       } catch {}
     </script>
+    {GOATCOUNTER && <script is:inline async data-goatcounter={`${GOATCOUNTER}/count`} src="https://gc.zgo.at/count.js"></script>}
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -93,7 +94,7 @@ const isActive = (p: string) => (p === '' ? path === url('') : path.startsWith(u
 
     <footer class="site-footer">
       <div class="wrap muted">
-        <span>© {new Date().getFullYear()} {SITE}</span>
+        <span>© {new Date().getFullYear()} {SITE}<span id="site-visits" data-gc={GOATCOUNTER} hidden></span></span>
         <span><a href={url('rss.xml')}>RSS</a> · <a href="https://github.com/KidCoderT">GitHub</a></span>
       </div>
     </footer>
@@ -115,6 +116,18 @@ const isActive = (p: string) => (p === '' ? path === url('') : path.startsWith(u
       const onScroll = () => header.classList.toggle('scrolled', scrollY > 8)
       addEventListener('scroll', onScroll, { passive: true })
       onScroll()
+
+      // Total visits in the footer; stays hidden if GoatCounter is off or blocked
+      const visits = document.getElementById('site-visits')!
+      if (visits.dataset.gc) {
+        fetch(`${visits.dataset.gc}/counter/TOTAL.json`)
+          .then((r) => (r.ok ? r.json() : Promise.reject()))
+          .then(({ count }) => {
+            visits.textContent = ` · ${count} visits`
+            visits.hidden = false
+          })
+          .catch(() => {})
+      }
     </script>
   </body>
 </html>

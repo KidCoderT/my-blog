@@ -760,6 +760,57 @@ main.wrap {
   overflow-x: auto;
 }
 
+/* Copy button: the wrapper keeps it pinned while long lines scroll underneath */
+.code-wrap {
+  position: relative;
+  margin: 1em 0;
+}
+.code-wrap > pre {
+  margin: 0;
+}
+.copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elev);
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-3px) scale(0.92);
+  transition: opacity 0.2s ease, transform 0.35s var(--spring), color 0.2s ease, border-color 0.2s ease;
+}
+.copy-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+.code-wrap:hover .copy-btn,
+.copy-btn:focus-visible,
+.copy-btn.copied {
+  opacity: 1;
+  transform: none;
+}
+.copy-btn:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+.copy-btn.copied {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+@media (hover: none) {
+  .copy-btn {
+    opacity: 0.7;
+    transform: none;
+  }
+}
+
 .katex-display {
   overflow-x: auto;
   overflow-y: hidden;
@@ -773,10 +824,57 @@ main.wrap {
   background-color: var(--shiki-dark-bg) !important;
 }
 
-.comments {
+/* ---- End of post: ✦ rule, thank-you, view count ---- */
+.end-mark {
   margin-top: 4rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.end-rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--accent);
+}
+.end-rule::before,
+.end-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.end-spark {
+  display: inline-block;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.end-mark.seen .end-spark {
+  animation: twinkle 0.9s var(--spring);
+}
+@keyframes twinkle {
+  0% { transform: scale(1) rotate(0); }
+  40% { transform: scale(1.6) rotate(72deg); }
+  100% { transform: scale(1) rotate(90deg); }
+}
+.end-thanks {
+  margin: 1.5rem 0 0.35rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+.end-views {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  visibility: hidden; /* keeps its line so nothing jumps when the count arrives */
+}
+.end-views.loaded {
+  visibility: visible;
+}
+
+.comments {
+  margin-top: 2.5rem;
 }
 
 /* ---- Search (Pagefind UI, recolored with tokens) ---- */

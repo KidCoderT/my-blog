@@ -19,5 +19,8 @@ export const tagUrl = (tag: string) => url(`tags/${encodeURIComponent(tag)}/`)
 /** view-transition-name only allows ident chars; post ids can contain "/". Collection keeps blog/x and notes/x distinct. */
 export const vtName = (p: Post) => `post-${p.collection}-` + p.id.replace(/[^A-Za-z0-9_-]/g, '-')
 
+/** GoatCounter site (https://<code>.goatcounter.com). Empty string turns analytics and view counts off. */
+export const GOATCOUNTER = 'https://kidcodert.goatcounter.com'
+
 /** dd-mm-yyyy (UTC, so the date never shifts with the reader's timezone) */
 export const fmtDate = (d: Date) => d.toISOString().slice(0, 10).split('-').reverse().join('-')
