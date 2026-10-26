@@ -710,6 +710,24 @@ main.wrap {
   margin: 2.5rem 0;
 }
 
+/* ✦ between sections of a post: <p class="section-break" aria-hidden="true">✦</p> */
+.prose .section-break {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9rem;
+  color: var(--accent);
+  margin: 2.5rem 0;
+}
+/* short hairlines either side, a mini version of the end-mark rule */
+.prose .section-break::before,
+.prose .section-break::after {
+  content: '';
+  width: 3rem;
+  height: 1px;
+  background: var(--border);
+}
+
 .prose table {
   border-collapse: collapse;
   display: block;
