@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content'
 import Base from '../../layouts/Base.astro'
-import { getPosts, tagUrl, vtName, fmtDate, GOATCOUNTER, type Post } from '../../posts'
+import { getPosts, tagUrl, vtName, fmtDate, edits, lastUpdated, historyUrl, GOATCOUNTER, type Post } from '../../posts'
 
 export async function getStaticPaths() {
   return (await getPosts()).map((post) => ({ params: { collection: post.collection, slug: post.id }, props: { post } }))
@@ -11,6 +11,9 @@ const { post } = Astro.props as { post: Post }
 const { Content, headings } = await render(post)
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3)
 const { title, description, date, updated, tags } = post.data
+const lastEdit = lastUpdated(post)
+// revision trail: every edit day (git), or just the manual `updated:` if there's no git history
+const trail = edits(post).length ? edits(post) : lastEdit ? [lastEdit] : []
 
 // Giscus: make the repo public, enable Discussions, install https://github.com/apps/giscus,
 // then copy the ids from https://giscus.app. Comments stay hidden until repoId is filled in.
@@ -23,9 +26,23 @@ const GISCUS = { repo: 'KidCoderT/my-blog', repoId: 'R_kgDOVU5QCA', category: 'A
       <h1><span class="vt-title" style={`view-transition-name:${vtName(post)}`}>{title}</span></h1>
       <div class="post-meta muted">
         <time datetime={date.toISOString()}>{fmtDate(date)}</time>
-        {updated && <span>· updated {fmtDate(updated)}</span>}
+        {lastEdit && <span class="upd-pill">↻ updated {fmtDate(lastEdit)}</span>}
         {tags.map((t) => <a class="tag" href={tagUrl(t)}>#{t}</a>)}
       </div>
+      {
+        lastEdit && (
+          <details class="revisions">
+            <summary>history</summary>
+            <ol>
+              {trail.map((d) => (
+                <li class="rev-edit"><time datetime={d.toISOString()}>{fmtDate(d)}</time> edited</li>
+              ))}
+              <li class="rev-created"><time datetime={date.toISOString()}>{fmtDate(date)}</time> created</li>
+            </ol>
+            <a class="rev-diffs" href={historyUrl(post)}>view diffs on GitHub →</a>
+          </details>
+        )
+      }
     </header>
 
     {

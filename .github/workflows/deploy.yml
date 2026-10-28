@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # full git history, so posts can show their "updated" date
       - uses: withastro/action@v6
   deploy:
     needs: build

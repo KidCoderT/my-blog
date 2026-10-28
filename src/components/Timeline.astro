@@ -1,39 +1,216 @@
 ---
 // Pudding-style timeline: posts grouped by year, newest first.
-import { fmtDate, postUrl, vtName, type Post } from '../posts'
+// Updates (from git) show 3 ways, picked by the reader in the "View" menu (data-tl on .tl-wrap):
+//   rows  = an extra blue "↻ updated" row at the update date (default)
+//   lanes = rows + a blue git-style line from the update down to where the post was created
+//   pill  = no extra rows, a "↻ dd-mm" pill after the title
+// data-edits = latest (default, only the newest edit row) | all (a row per edit)
+import { fmtDate, postUrl, vtName, edits, lastUpdated, type Post } from '../posts'
 
 const { posts } = Astro.props as { posts: Post[] }
 
-const years = new Map<number, Post[]>()
-for (const p of posts) {
-  const y = p.data.date.getUTCFullYear()
-  years.set(y, [...(years.get(y) ?? []), p])
-}
 // dd-mm; the year is the group heading
 const ddmm = (d: Date) => fmtDate(d).slice(0, 5)
+
+// update events: one per edit; older ones only show with data-edits="all"
+type Ev = { p: Post; date: Date; update: boolean; older?: boolean; count?: number }
+const editsOf = (p: Post) => {
+  const e = edits(p)
+  const u = lastUpdated(p)
+  return e.length ? e : u ? [u] : []
+}
+const events: Ev[] = posts.flatMap((p) => {
+  const e = editsOf(p)
+  return [{ p, date: p.data.date, update: false }, ...e.map((date, k) => ({ p, date, update: true, older: k > 0, count: e.length }))]
+})
+// newest first; on the same day the update sits above
+events.sort((a, b) => b.date.valueOf() - a.date.valueOf() || Number(b.update) - Number(a.update))
+
+// one flat list of year headers + rows, so lanes can run across years
+type Year = { year: number; count: number }
+const items: (Year | Ev)[] = []
+for (const e of events) {
+  const y = e.date.getUTCFullYear()
+  const last = items.findLast((x): x is Year => 'year' in x)
+  if (last?.year !== y) items.push({ year: y, count: posts.filter((p) => p.data.date.getUTCFullYear() === y).length })
+  items.push(e)
+}
+
+// lanes: each update gets the first lane that's free from its row down to its created row.
+// ponytail: greedy and capped at 3 lanes; beyond that the update just shows as a row.
+const MAX_LANES = 3
+const laneEnd: number[] = []
+const spans: { lane: number; from: number; to: number; p: Post }[] = []
+items.forEach((it, i) => {
+  if (!('update' in it) || !it.update || it.older) return
+  const to = items.findIndex((x) => 'p' in x && x.p === it.p && !x.update)
+  let lane = laneEnd.findIndex((end) => end < i)
+  if (lane === -1 && laneEnd.length < MAX_LANES) lane = laneEnd.length
+  if (lane === -1) return
+  laneEnd[lane] = to
+  spans.push({ lane, from: i, to, p: it.p })
+})
+const lanesWidth = laneEnd.length * 12
+const segs = (i: number) =>
+  spans
+    .filter((s) => s.from <= i && i <= s.to)
+    .flatMap((s) => {
+      const kind = i === s.from ? 'start' : i === s.to ? 'end' : 'through'
+      const it = items[i]
+      // an older edit of this same post: the lane runs through it with a tick into the dot, like a commit on a branch
+      const join = kind === 'through' && 'p' in it && it.p === s.p && it.older
+      return join ? [{ lane: s.lane, kind }, { lane: s.lane, kind: 'join' }] : [{ lane: s.lane, kind }]
+    })
 ---
 
-{
-  [...years].map(([year, list]) => (
-    <section aria-labelledby={`y${year}`}>
-      <div class="year-head">
-        <span class="date" id={`y${year}`}>{year}</span>
-        <span class="connector"><span class="dot" /></span>
-        <span class="muted">{list.length} post{list.length > 1 ? 's' : ''}</span>
+<div class="tl-shell">
+<div class="tl-view">
+  <button type="button" class="tl-view-btn" aria-expanded="false" aria-controls="tl-view-panel">
+    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4.5h7M12 4.5h2M2 11.5h2M7 11.5h7" /><circle cx="10.5" cy="4.5" r="1.6" /><circle cx="5.5" cy="11.5" r="1.6" /></svg>
+    View
+    <span class="tl-view-mod" aria-hidden="true"></span>
+  </button>
+  <div class="tl-view-panel" id="tl-view-panel" role="dialog" aria-label="Timeline view" hidden>
+    <fieldset>
+      <legend>Show updates as</legend>
+      <div class="tl-opts">
+        <label class="tl-opt">
+          <input type="radio" name="tl" value="rows" checked />
+          <svg viewBox="0 0 44 36" aria-hidden="true">
+            <path class="sp" d="M10 3v30" />
+            <circle class="g" cx="10" cy="7" r="2.5" /><circle class="h" cx="10" cy="18" r="3.2" /><circle class="g" cx="10" cy="29" r="2.5" />
+            <rect class="gb" x="18" y="5" width="20" height="4" rx="2" /><rect class="bb" x="18" y="16" width="16" height="4" rx="2" /><rect class="gb" x="18" y="27" width="22" height="4" rx="2" />
+          </svg>
+          <span>Rows</span>
+        </label>
+        <label class="tl-opt">
+          <input type="radio" name="tl" value="lanes" />
+          <svg viewBox="0 0 44 36" aria-hidden="true">
+            <path class="sp" d="M10 3v30" />
+            <path class="ln" d="M13 18h3q3 0 3 3v5q0 3-3 3h-3.5" />
+            <circle class="g" cx="10" cy="7" r="2.5" /><circle class="h" cx="10" cy="18" r="3.2" /><circle class="g" cx="10" cy="29" r="2.5" />
+            <rect class="gb" x="24" y="5" width="16" height="4" rx="2" /><rect class="bb" x="24" y="16" width="14" height="4" rx="2" /><rect class="gb" x="24" y="27" width="16" height="4" rx="2" />
+          </svg>
+          <span>Lanes</span>
+        </label>
+        <label class="tl-opt">
+          <input type="radio" name="tl" value="pill" />
+          <svg viewBox="0 0 44 36" aria-hidden="true">
+            <path class="sp" d="M10 3v30" />
+            <circle class="g" cx="10" cy="7" r="2.5" /><circle class="g" cx="10" cy="18" r="2.5" /><circle class="g" cx="10" cy="29" r="2.5" />
+            <rect class="gb" x="18" y="5" width="20" height="4" rx="2" /><rect class="gb" x="18" y="16" width="12" height="4" rx="2" /><rect class="pl" x="32" y="15" width="9" height="6" rx="3" /><rect class="gb" x="18" y="27" width="22" height="4" rx="2" />
+          </svg>
+          <span>Pill</span>
+        </label>
       </div>
-      <ul class="tl">
-        {list.map((p) => (
-          <li>
-            <a class="tl-row spark-host" href={postUrl(p)}>
-              <time class="date" datetime={p.data.date.toISOString()}>{ddmm(p.data.date)}</time>
+    </fieldset>
+    <fieldset class="tl-edits">
+      <legend>Edits</legend>
+      <div class="tl-seg">
+        <label><input type="radio" name="edits" value="latest" checked /><span>Latest only</span></label>
+        <label><input type="radio" name="edits" value="all" /><span>Every edit</span></label>
+      </div>
+      <p class="tl-hint">Pill shows a count instead.</p>
+    </fieldset>
+    <button type="button" class="tl-reset">Reset</button>
+  </div>
+</div>
+
+<div class="tl-wrap" data-tl="rows" data-edits="latest">
+  <ul class="tl">
+    {
+      items.map((it, i) => {
+        const lanes = lanesWidth > 0 && (
+          <span class="lanes" style={`width:${lanesWidth}px`} aria-hidden="true">
+            {segs(i).map((s) => <span class={`lane ${s.kind}`} style={`--l:${s.lane}`} />)}
+          </span>
+        )
+        if ('year' in it)
+          return (
+            <li class="year-head">
+              <span class="date">{it.year}</span>
               <span class="connector"><span class="dot" /></span>
-              <span class="tl-title"><span class="vt-title spark" style={`view-transition-name:${vtName(p)}`}>{p.data.title}</span></span>
-              <span class="tl-tags">{p.data.tags.map((t) => `#${t}`).join(' ')}</span>
+              {lanes}
+              <span class="muted">{it.count} post{it.count === 1 ? '' : 's'}</span>
+            </li>
+          )
+        const { p, date, update, older, count = 0 } = it
+        const e = update ? [] : editsOf(p)
+        return (
+          <li class:list={{ 'older-edit': older }}>
+            <a class:list={['tl-row spark-host', { 'is-update': update }]} href={postUrl(p)}>
+              <time class="date" datetime={date.toISOString()}>{ddmm(date)}</time>
+              <span class="connector"><span class="dot" /></span>
+              {lanes}
+              {update ? (
+                <span class="tl-title">
+                  ↻ {p.data.title} <span class="upd-word">{older ? 'edited' : 'updated'}</span>
+                  {!older && count > 1 && <span class="edit-count">· {count} edits</span>}
+                </span>
+              ) : (
+                <span class="tl-title">
+                  <span class="vt-title spark" style={`view-transition-name:${vtName(p)}`}>{p.data.title}</span>
+                  {e.length > 0 && <span class="upd-pill">↻ {ddmm(e[0])}{e.length > 1 && ` · ${e.length}`}</span>}
+                </span>
+              )}
+              {!update && <span class="tl-tags">{p.data.tags.map((t) => `#${t}`).join(' ')}</span>}
             </a>
           </li>
-        ))}
-      </ul>
-    </section>
-  ))
-}
+        )
+      })
+    }
+  </ul>
+</div>
+</div>
+<script is:inline>
+  // apply the reader's saved view before paint, so the list doesn't jump from rows to lanes
+  try {
+    const v = JSON.parse(localStorage.getItem('tl-view') || '{}')
+    const w = document.currentScript.previousElementSibling.querySelector('.tl-wrap')
+    if (v.tl) w.dataset.tl = v.tl
+    if (v.edits) w.dataset.edits = v.edits
+  } catch {}
+</script>
 {posts.length === 0 && <p class="muted">No posts yet.</p>}
+
+<script>
+  // "View" menu: how updates show (rows / lanes / pill) and latest-only vs every edit. Saved per reader.
+  const DEFAULT = { tl: 'rows', edits: 'latest' }
+  const wrap = document.querySelector<HTMLElement>('.tl-wrap')
+  const btn = document.querySelector<HTMLButtonElement>('.tl-view-btn')
+  const panel = document.querySelector<HTMLElement>('.tl-view-panel')
+
+  if (wrap && btn && panel) {
+    const radios = panel.querySelectorAll<HTMLInputElement>('input[type="radio"]')
+    const current = () => ({ tl: wrap.dataset.tl!, edits: wrap.dataset.edits! })
+
+    const sync = () => {
+      const v = current()
+      radios.forEach((r) => (r.checked = v[r.name as 'tl' | 'edits'] === r.value))
+      btn.classList.toggle('modified', v.tl !== DEFAULT.tl || v.edits !== DEFAULT.edits)
+      panel.classList.toggle('is-pill', v.tl === 'pill')
+    }
+    const save = (v: { tl: string; edits: string }) => {
+      wrap.dataset.tl = v.tl
+      wrap.dataset.edits = v.edits
+      try { localStorage.setItem('tl-view', JSON.stringify(v)) } catch {}
+      sync()
+    }
+
+    const open = (yes: boolean) => {
+      panel.hidden = !yes
+      btn.setAttribute('aria-expanded', String(yes))
+      if (yes) panel.querySelector<HTMLInputElement>('input:checked')?.focus()
+    }
+    btn.addEventListener('click', () => open(panel.hidden))
+    radios.forEach((r) => r.addEventListener('change', () => save({ ...current(), [r.name]: r.value })))
+    panel.querySelector('.tl-reset')!.addEventListener('click', () => save(DEFAULT))
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !panel.hidden) { open(false); btn.focus() }
+    })
+    document.addEventListener('click', (e) => {
+      if (!panel.hidden && !(e.target as Element).closest('.tl-view')) open(false)
+    })
+    sync()
+  }
+</script>
