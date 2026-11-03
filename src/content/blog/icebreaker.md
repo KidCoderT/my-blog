@@ -30,7 +30,7 @@ It said: The purpose of an ice breaker speach is as follows
 
 Hmm, know you better by the end of it... how do I do that? Share a grand story? A life-altering epiphany? I don't know... But then it got me thinking... an icebreaker is meant for all of you to know about me... it's so that we learn about each other and feel more connected. So I've decided this speech... it is not a speech...
 
-It's an interview application so you all reach out to interact with me cause god knows I'm shy as hell and overthink everything way too much.
+It's an interview application so you all reach out to interact with me cause god knows I'm shy and overthink everything way too much.
 
 (Pause for laughter)
 
@@ -52,7 +52,7 @@ To me, your mind is a computer system: garbage in, garbage out. If you feed your
 
 It brings me to another perspective in life and that is you are the product of your actions. It's a scary thought, but an empowering one. Because if u are a product of your actions... then u are in control. And ur actions every day matter a lot.
 
-And honestly, that's why I'm up here today. I just wanted to share who I am as a person. Im up here with a healthy mind, a loving family back home, and a burning heart to learn. I might overthink, and I might be shy, but I want to grow, build lasting relationships, and make genuine friends here.
+And honestly, that's why I'm up here today. Im up here with a healthy mind, a loving family back home, and a burning heart to learn. I might overthink, and I might be shy, but I want to grow, build lasting relationships, and make genuine friends and imporve myself to levels i havent yet reached.
 
 So thats my application, interviews are open Come find me after! Thank you 
 
