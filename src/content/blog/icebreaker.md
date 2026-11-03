@@ -11,6 +11,7 @@ tags:
 
 ## Version 2
 
+
 Mr./Madam Toastmaster, fellow members, and guests.
 
 "Icebreaker, Icebreaker, Icebreaker..." _Pace around the stage + each word getting more tense_
@@ -33,7 +34,7 @@ It's an interview application so you all reach out to interact with me cause god
 
 (Pause for laughter)
 
-In all honesty though, I'm a simple guy. I don't like to hide behind fancy words or connotations. I'm a guy who wants to work on projects and wishes to make a change in the world. I have a constant attraction to learn understand and to build amazing ideas that help others with small problems.
+In all honesty though, I'm a simple guy. I don't like to hide behind fancy words or connotations. I'm a guy who wants to work on projects and wishes to make a change in the world. I have this constant attraction to learn understand and to build amazing ideas that help others with problems.
 
 And this fascination and interest on the world is reflected by the simple fact that I am interested in anything and everything...
 
@@ -49,11 +50,11 @@ Funnily enough, I want to learn dance to then learn martial arts. Crazy, right? 
 
 To me, your mind is a computer system: garbage in, garbage out. If you feed your eyes, ears and nose with craftsmanship, art, and meaning, that optimism is what you emanate back into the world. So good things in, good things out... but also bad things in, bad things out. That idea keeps you on your toes. Makes you really think what do u want to do, and focus on those.
 
-It brings me to another perspective in life and that is that I don’t believe in one global truth. I beleive there is only viewpoints and the perspectives you choose to see.. And my main viewpoint is simple: you are the product of your actions. It's a scary thought, but an empowering one. Because if u are a product of your actions... then u are in control. And ur actions every day matter a lot.
+It brings me to another perspective in life and that is you are the product of your actions. It's a scary thought, but an empowering one. Because if u are a product of your actions... then u are in control. And ur actions every day matter a lot.
 
-As you can all see, there is no purpose or meaningful story to this icebreaker speech. I just wanted to share who I am as a person. I stand here today with a healthy mind, a loving family back home, and a hungry brain. I might overthink, and I might be shy, but I want to grow, build lasting relationships, and make genuine friends here.
+And honestly, that's why I'm up here today. I just wanted to share who I am as a person. Im up here with a healthy mind, a loving family back home, and a burning heart to learn. I might overthink, and I might be shy, but I want to grow, build lasting relationships, and make genuine friends here.
 
-Thank you, and I look forward to meeting you all!
+So thats my application, interviews are open Come find me after! Thank you 
 
 ## Version 1
 
