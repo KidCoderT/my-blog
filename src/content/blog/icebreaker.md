@@ -7,12 +7,11 @@ tags:
   - toastmaster
 ---
 
-> This is my speech the one I prepared for my NUS Toastmaster club that I'm sharing here for fun!
+> This is my speech that I prepared for my NUS Toastmaster club that I'm sharing here for fun!
+> I also included past versions of the speach to just show and look back on the speach and its improvements.\
+> PS: I did the speach.... AND I GOT BEST SPEAKER OF THE MEET BADGE!!!! LETS GO!!
 
-## Version 2
-
-
-Mr./Madam Toastmaster, fellow members, and guests.
+## Version 3
 
 "Icebreaker, Icebreaker, Icebreaker..." _Pace around the stage + each word getting more tense_
 
@@ -25,6 +24,7 @@ I kept spiraling, wondering, and trying to extract ideas from my brain only to r
 So a week back I decided to take a break. And so I went back to the Toastmasters project manual. _Act as though holding a paper with a list_
 
 It said: The purpose of an ice breaker speach is as follows
+
 1. is to introduce yourself. _Turn to the Audience_ Hey guys, my name is Tejas! _Turn back to the paper_
 2. The audience should know you better by the end.
 
@@ -54,9 +54,60 @@ It brings me to another perspective in life and that is you are the product of y
 
 And honestly, that's why I'm up here today. Im up here with a healthy mind, a loving family back home, and a burning heart to learn. I might overthink, and I might be shy, but I want to grow, build lasting relationships, and make genuine friends and imporve myself to levels i havent yet reached.
 
-So thats my application, interviews are open Come find me after! Thank you 
+So thats my application, interviews are open Come find me after! Thank you
 
-## Version 1
+<details>
+<summary>Version 2</summary>
+
+Mr./Madam Toastmaster, fellow members, and guests.
+
+"Icebreaker, Icebreaker, Icebreaker..." _Pace around the stage + each word getting more tense_
+
+_Stand straight facing the audience_
+
+Honestly, this ice has been breaking my head for about three weeks now.
+
+I kept spiraling, wondering, and trying to extract ideas from my brain only to realise it's freaking empty.
+
+So a week back I decided to take a break. And so I went back to the Toastmasters project manual. _Act as though holding a paper with a list_
+
+It said: The purpose of an ice breaker speach is as follows
+
+1. is to introduce yourself. _Turn to the Audience_ Hey guys, my name is Tejas! _Turn back to the paper_
+2. The audience should know you better by the end.
+
+Hmm, know you better by the end of it... how do I do that? Share a grand story? A life-altering epiphany? I don't know... But then it got me thinking... an icebreaker is meant for all of you to know about me... it's so that we learn about each other and feel more connected. So I've decided this speech... it is not a speech...
+
+It's an interview application so you all reach out to interact with me cause god knows I'm shy as hell and overthink everything way too much.
+
+(Pause for laughter)
+
+In all honesty though, I'm a simple guy. I don't like to hide behind fancy words or connotations. I'm a guy who wants to work on projects and wishes to make a change in the world. I have a constant attraction to learn understand and to build amazing ideas that help others with small problems.
+
+And this fascination and interest on the world is reflected by the simple fact that I am interested in anything and everything...
+
+I mean, just the other day right here in YIH cafeteria, I bought a juice bottle. I then spent a solid 10 minutes admiring the cap, fascinated by the simple, ingenious flap designed to keep customers from hurting their fingers.
+
+That curiosity drives everything I love.
+
+I love science, art, philosophy, and nature. People often separate science and art, but I follow Leonardo da Vinci’s philosophy: "Study the science of art, and the art of science." I’m no master artist, but I love putting pen strokes on paper when I'm bored.
+
+Art in itself, though, is diverse. Apart from the pen and paper I’m fascinated by rap music, the lyrical acrobatics and verbal tongue-gymnastics, it's insane... And that same acrobatics and gymnastics when it's moved and put to the body, I love dance, because it takes a lot of physical strength, agility and practice and the way people control their bodies with pure grace, it mesmerizes me.
+
+Funnily enough, I want to learn dance to then learn martial arts. Crazy, right? But actual fighting is a lot about footwork and quick agile and movement. So if u can move fast, you can punch fast and dodge faster. I know I'm spiraling with this speech but that's just the kind of person I am... Connect topics, take ideas, break them and find connections, join it back and learn new information. That's what I do in life and in my mind.
+
+To me, your mind is a computer system: garbage in, garbage out. If you feed your eyes, ears and nose with craftsmanship, art, and meaning, that optimism is what you emanate back into the world. So good things in, good things out... but also bad things in, bad things out. That idea keeps you on your toes. Makes you really think what do u want to do, and focus on those.
+
+It brings me to another perspective in life and that is that I don’t believe in one global truth. I beleive there is only viewpoints and the perspectives you choose to see.. And my main viewpoint is simple: you are the product of your actions. It's a scary thought, but an empowering one. Because if u are a product of your actions... then u are in control. And ur actions every day matter a lot.
+
+As you can all see, there is no purpose or meaningful story to this icebreaker speech. I just wanted to share who I am as a person. I stand here today with a healthy mind, a loving family back home, and a hungry brain. I might overthink, and I might be shy, but I want to grow, build lasting relationships, and make genuine friends here.
+
+Thank you, and I look forward to meeting you all!
+
+</details>
+
+<details>
+<summary>Version 1</summary>
 
 Icebreaker, Icebreaker, Icebreaker... _Pace around acting lost on each word_
 
@@ -98,3 +149,5 @@ Optimism vs pessimism: I'm half and half. I will be honest if something sucks bu
 As you can all see, there is no purpose or meaningful story to this icebreaker speech. I have a loving family with my parents and younger brother. I have a healthy mind and body. I wish to make more friends and learn and grow in life. And I hope after this speech we can be friends and make lasting relationships.
 
 Thank you.
+
+</details>
