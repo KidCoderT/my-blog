@@ -7,5 +7,7 @@ dist/
 **/.obsidian/*
 src/content/drawings/*
 src/content/drawings/
-src/content/ignore/*
+src/content/garbage/*
+src/content/garbage/*
+src/content/ignore/
 src/content/ignore/
