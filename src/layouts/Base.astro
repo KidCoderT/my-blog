@@ -86,6 +86,7 @@ const isActive = (p: string) => (p === '' ? path === url('') : path.startsWith(u
           </button>
         </div>
       </div>
+      <slot name="header" />
     </header>
 
     <main id="main" class="wrap">

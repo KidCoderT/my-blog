@@ -21,6 +21,7 @@ const GISCUS = { repo: 'KidCoderT/my-blog', repoId: 'R_kgDOVU5QCA', category: 'A
 ---
 
 <Base title={title} description={description}>
+  <div slot="header" class="read-progress" id="read-progress" aria-hidden="true"></div>
   <article class="post-grid">
     <header class="post-head">
       <h1><span class="vt-title" style={`view-transition-name:${vtName(post)}`}>{title}</span></h1>
@@ -91,6 +92,45 @@ const GISCUS = { repo: 'KidCoderT/my-blog', repoId: 'R_kgDOVU5QCA', category: 'A
         })
         .catch(() => {})
     }
+  </script>
+
+  <script>
+    // Reading progress bar + highlight the TOC entry for the section on screen
+    const bar = document.getElementById('read-progress')!
+    const list = document.querySelector<HTMLElement>('.toc ul')
+    const links = [...document.querySelectorAll<HTMLAnchorElement>('.toc a')]
+    const heads = links.map((a) => document.getElementById(decodeURIComponent(a.hash.slice(1))))
+    const calm = matchMedia('(prefers-reduced-motion: reduce)')
+    let current: HTMLAnchorElement | undefined
+    let queued = false
+
+    const update = () => {
+      queued = false
+      const max = document.documentElement.scrollHeight - innerHeight
+      const p = max > 0 ? Math.min(scrollY / max, 1) : 0
+      bar.style.transform = `scaleX(${p})`
+
+      // active = last heading above the 1/3 line; at the very bottom, the last one
+      let i = -1
+      if (p > 0.995) i = links.length - 1
+      else for (let j = 0; j < heads.length; j++) if (heads[j] && heads[j]!.getBoundingClientRect().top < innerHeight / 3) i = j
+      const next = links[i]
+      if (next === current) return
+      current?.classList.remove('active')
+      next?.classList.add('active')
+      current = next
+      if (!next || !list) return
+      // slide the marker on the sidebar line to the active entry
+      list.style.setProperty('--y', `${next.offsetTop}px`)
+      list.style.setProperty('--h', `${next.offsetHeight}px`)
+      list.classList.add('has-active')
+      // keep the active entry ~40% down the sidebar when it scrolls on its own (desktop)
+      if (list.scrollHeight > list.clientHeight)
+        list.scrollTo({ top: next.offsetTop - list.clientHeight * 0.4, behavior: calm.matches ? 'auto' : 'smooth' })
+    }
+    addEventListener('scroll', () => queued || ((queued = true), requestAnimationFrame(update)), { passive: true })
+    addEventListener('resize', update)
+    update()
   </script>
 
   <script>
